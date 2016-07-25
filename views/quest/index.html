@@ -4,17 +4,7 @@ response.files.append(URL('static','js/d3pie.min.js'))
 response.files.append(URL('static','js/nv.d3.min.js'))
 response.files.append(URL('static','css/nv.d3.css'))
 }}
-{{left_sidebar_enabled,right_sidebar_enabled=False,True}}
+{{left_sidebar_enabled,right_sidebar_enabled=False,False}}
 {{extend 'layout.html'}}
-
-
-{{if 'message' in globals():}}
-<h3>{{=message}}</h3>
-{{else:}}
-{{=BEAUTIFY(response._vars)}}
-{{pass}}
-{{=A(T("Questionaries"), _href=URL('quest','quest'), _class='button', _style='margin-top: 1em;')}}
-{{=A(T("Variables"), _href=URL('quest','vars_quest'), _class='button', _style='margin-top: 1em;')}}
-{{=A(T("Dictionary"), _href=URL('quest','vars_dict'), _class='button', _style='margin-top: 1em;')}}
-{{block right_sidebar}}
-{{end}}
+<h3>{{=label}}</h3>
+{{=grid}}

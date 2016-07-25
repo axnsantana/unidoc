@@ -14,7 +14,8 @@ def table_list(table,label,orderby):
 
 @auth.requires_login()
 def index():
-    return dict()
+    table=db.questionaries
+    return table_list(table,T("Questionaries"),table.name)
 
 @auth.requires_login()
 def quest():
