@@ -1,0 +1,6 @@
+[submodule "static/plugin_d3/crossfilter"]
+	path = static/plugin_d3/crossfilter
+	url = https://github.com/square/crossfilter
+[submodule "static/plugin_d3/dc.js"]
+	path = static/plugin_d3/dc.js
+	url = https://github.com/dc-js/dc.js
