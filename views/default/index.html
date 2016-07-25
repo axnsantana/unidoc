@@ -1,0 +1,185 @@
+{{
+response.files.append(URL('static','plugin_d3/d3/d3.js'))
+response.files.append(URL('static','js/d3pie.min.js'))
+response.files.append(URL('static','js/nv.d3.min.js'))
+response.files.append(URL('static','css/nv.d3.css'))
+}}
+{{left_sidebar_enabled,right_sidebar_enabled=False,True}}
+{{extend 'layout.html'}}
+
+
+{{if 'message' in globals():}}
+<h3>{{=message}}</h3>
+{{else:}}
+{{=BEAUTIFY(response._vars)}}
+{{pass}}
+{{block right_sidebar}}
+{{end}}
+
+<h4>General Statistics</h4>
+
+<div id=stats style='display: flex;' >
+<div id=pieGroups style='flex: 1;'>
+</div>
+<div id=pieExpts style='flex: 1;'>
+</div>
+</div>
+
+<div id="general_stats">
+<div id="grps_gnd" style="height:300px">
+  <svg></svg>
+</div>
+<div id="expts_gnd" style="height:300px">
+  <svg></svg>
+</div>
+<div id="exp_grp" style="height:300px">
+  <svg></svg>
+</div>
+</div>
+
+<script>
+
+var gender=[
+{{for g in freq_gender:}}
+   {label:"{{=g}}", value:{{=freq_gender[g]}}},
+{{pass}}
+];
+
+var groups=[
+{{for g in freq_groups:}}
+   {label:"{{=g}}", value:{{=freq_groups[g]}}},
+{{pass}}
+];
+
+var expts=[
+{{for e in freq_experiments:}}
+   {label:"{{=e}}", value:{{=freq_experiments[e]}}},
+{{pass}}
+];
+
+var pie = new d3pie("pieGender", {
+    header: {
+        title: {
+            text: "Gender"
+        },
+        location: "top-center"
+    },
+    size: {
+        canvasHeight: 200,
+        canvasWidth: 200,
+        pieInnerRadius: "30%",
+        pieOuterRadius: "80%"
+    },
+    labels: {
+        percentage: {color: "000000"},
+        value: {color: "000000"}
+    },
+    data: {
+        sortOrder: "label-asc",
+        content: gender,
+    }});
+
+var pieGroups = new d3pie("pieGroups", {
+    header: {
+        title: {
+            text: "Groups"
+        },
+        location: "pie-center"
+    },
+    size: {
+        canvasHeight: 400,
+        canvasWidth: 400,
+        pieInnerRadius: "50%"
+    },
+    labels: {
+        inner: {format: "value"},
+        percentage: {color: "000000"},
+        value: {color: "000000"}
+    },
+    data: {
+        sortOrder: "value-desc",
+        content: groups,
+    }});
+
+var pieExpts = new d3pie("pieExpts", {
+    header: {
+        title: {
+            text: "Experiments"
+        },
+        location: "pie-center"
+    },
+    size: {
+        canvasHeight: 400,
+        canvasWidth: 400,
+        pieInnerRadius: "50%"
+    },
+    labels: {
+        inner: {format: "value"},
+        percentage: {color: "000000"},
+        value: {color: "000000"}
+    },
+    data: {
+        sortOrder: "value-desc",
+        content: expts,
+    }});
+
+var grp_gender=[
+{{for grp in grp_gender:}}
+  { key: "{{=grp}}",
+    values: [
+    {{for gnd in grp_gender[grp]:}}
+      {x:"{{=gnd}}", y:{{=grp_gender[grp][gnd]}}},
+    {{pass}}
+    ]
+  },
+{{pass}}
+];
+plotGraph('#grps_gnd svg', grp_gender, "Gender", "N. Patients")
+
+var exp_gender=[
+{{for exp in exp_gender:}}
+  { key: "{{=exp}}",
+    values: [
+    {{for gnd in exp_gender[exp]:}}
+      {x:"{{=gnd}}", y:{{=exp_gender[exp][gnd]}}},
+    {{pass}}
+    ]
+  },
+{{pass}}
+];
+plotGraph('#expts_gnd svg', exp_gender, "Gender", "N. Patients", "")
+
+var grp_exp=[
+{{for exp in grp_exp:}}
+  { key: "{{=exp}}",
+    values: [
+    {{for grp in grp_exp[exp]:}}
+      {x:"{{=grp}}", y:{{=grp_exp[exp][grp]}}},
+    {{pass}}
+    ]
+  },
+{{pass}}
+];
+plotGraph('#exp_grp svg', grp_exp, "", "N. Patients", "Experiments and Groups", 45)
+
+function plotGraph(handle, data, xlabel, ylabel, title="", angleXlabel=0){
+nv.addGraph(function() {
+    var chart = nv.models.multiBarChart();
+    chart.margin({top: 30, bottom: 80});
+    chart.reduceXTicks(false)
+         .rotateLabels(angleXlabel);
+    chart.xAxis.axisLabel(xlabel);
+    chart.yAxis
+         .tickFormat(d3.format('d'))
+         .axisLabel(ylabel);
+    d3.select(handle)
+        .datum(data)
+        .transition().duration(500)
+        .call(chart)
+        ;
+    nv.utils.windowResize(chart.update);
+    return chart;
+});
+}
+
+</script>
