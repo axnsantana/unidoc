@@ -54,10 +54,12 @@ if not request.env.web2py_runtime_gae:
        Field('email',label=T("E-mail")),
        Field('phones',type='list:string',label=T("Phones")),
        Field('old_codes',type='list:string',label=T("Old Codes")),
-       Field('experiments', 'list:reference experiments',label=T("Experiments")),
-       Field('groups', 'list:reference groups',label=T("Groups")),
+       Field('experiments', 'list:reference experiments',label=T("Experiments"),widget=SQLFORM.widgets.checkboxes.widget),
+       Field('groups', 'list:reference groups',label=T("Groups"),widget=SQLFORM.widgets.checkboxes.widget),
        format = '%(name)s - P%(id)s')
-    db.patient.sex.requires=IS_IN_SET([T('Female'),T('Male'),T('Undeclared')])
+    db.patient.name.requires=IS_NOT_EMPTY()
+    db.patient.birth_date.requires=IS_NOT_EMPTY()
+    db.patient.sex.requires=IS_IN_SET([T('Female'),T('Male'),T('Undeclared')],zero=T("Choose one"))
     db.patient.experiments.requires=IS_IN_DB(db,db.experiments,db.experiments._format,multiple=True)
     db.patient.groups.requires=IS_IN_DB(db,db.groups,db.groups._format,multiple=True)
 
