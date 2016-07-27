@@ -100,6 +100,7 @@ if not request.env.web2py_runtime_gae:
        Field('researcher_id', 'reference researcher',label=T("Examiner")),
        Field('experiments_id', 'reference experiments',label=T("Experiment")),
        Field('exams_type_id', 'reference exams_type',label=T("Type")),
+       Field('tags',type='list:string',label=T("Tags")),
        Field('description',type='text',label=T("Description")),
        format = lambda r: '[%s] %s [%s] %s : %s' % (db.exams_type(r.exams_type_id).name,
                                               db.patient(r.patient_id).name,
