@@ -24,6 +24,28 @@ from gluon.contrib.appconfig import AppConfig
 # -------------------------------------------------------------------------
 myconf = AppConfig(reload=True)
 
+def patient_tooltip(pid):
+   import datetime
+   ptt=db.patient[pid]
+   # tip=[]
+   # tip.append("Gender")
+   # tip.append(ptt.sex)
+   # tip2=": ".join(tip)
+   # print type(T('Caixa').encode())
+   birth_date=ptt.birth_date
+   if(birth_date is None):
+      birth_date='00/00/0000'
+   else:
+      birth_date=birth_date.strftime("%d/%m/%Y")
+   phones='|'.join(ptt.phones)
+   tip="; ".join([': '.join([T("Gender").encode(),ptt.sex]),
+                ': '.join([T("Birth").encode(),birth_date]),
+                ': '.join([T("Address").encode(),ptt.address]),
+                ': '.join([T("E-mail").encode(),ptt.email]),
+                ': '.join([T("Phones").encode(),phones]),
+                ': '.join([T("Obs").encode(),ptt.observations])])
+   return DIV(ptt.name,_title=tip)
+
 if not request.env.web2py_runtime_gae:
     # ---------------------------------------------------------------------
     # if NOT running on Google App Engine use SQLite or other DB
@@ -43,7 +65,7 @@ if not request.env.web2py_runtime_gae:
        format = '%(code)s - %(name)s')
 
     db.define_table('patient',
-       Field('name',label=T("Name")),
+       Field('name',label=T("Name"),unique=True,represent=lambda id, r: patient_tooltip(r.id)),
        Field('sex',label=T("Gender")),
        Field('birth_date','date',label=T("Birth Date")),
        Field('first_contact','date',label=T("First Contact")),

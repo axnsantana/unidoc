@@ -131,11 +131,15 @@ def patients_list():
       return dict(grid=SQLFORM.grid(table,fields=fields,
               orderby=orderby,maxtextlength=64, paginate=25),
               label=label)
-   else:
+   if auth.has_membership(group_id='researcher'):
       return dict(grid=SQLFORM.grid(table,fields=fields,
               create=False,deletable=False,editable=False,
               orderby=orderby,maxtextlength=64, paginate=25),
               label=label)
+   return dict(grid=SQLFORM.grid(table,fields=fields,
+           create=False,deletable=False,editable=False,
+           orderby=orderby,maxtextlength=64, paginate=25),
+           label=label)
 
 @auth.requires_login()
 def researcher_list():
