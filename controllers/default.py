@@ -121,8 +121,11 @@ def table_list(table,label,orderby,create=True):
               label=label)
 
 def patients_code():
-   rows = db().select(db.patient.id,db.patient.name)
-   return rows.as_json()
+   if 'q' in request.vars:
+      q=request.vars['q']
+      rows = db(db.patient.name.contains(q)).select(db.patient.id,db.patient.name)
+      return rows.as_json()
+   return
    # data={}
    # for row in rows:
    #    data[row.id] = "P%s%s" % (row.id,row.sex)
