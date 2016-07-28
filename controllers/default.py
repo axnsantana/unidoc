@@ -120,6 +120,14 @@ def table_list(table,label,orderby,create=True):
               orderby=orderby,maxtextlength=64, paginate=25),
               label=label)
 
+def patients_code():
+   rows = db().select(db.patient.id,db.patient.name)
+   return rows.as_json()
+   # data={}
+   # for row in rows:
+   #    data[row.id] = "P%s%s" % (row.id,row.sex)
+   # return json.dumps(data)
+
 @auth.requires_login()
 def patients_list():
    table=db.patient
