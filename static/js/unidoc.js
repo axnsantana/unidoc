@@ -1,5 +1,3 @@
-$( function() {
-    $( document ).tooltip({
-      track: true
-    });
-  } );
+$(document).ready(function(){
+  $('[data-toggle="tooltip"]').tooltip();
+});

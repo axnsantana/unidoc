@@ -8,16 +8,6 @@ def download():
     """
     return response.download(request, db)
 
-
-@auth.requires_login()
-def conn_lime():
-    limeurl = myconf.get('lime.uri')
-    limeuser = myconf.get('lime.usr')
-    limepasswd = myconf.get('lime.passwd')
-    lime = PyLimeRc(limeurl)
-    lime.get_session_key(limeuser, limepasswd)
-    return lime
-
 @auth.requires_login()
 def table_list(table, label, orderby):
     table.id.readable = False
@@ -30,15 +20,29 @@ def table_list(table, label, orderby):
 def index():
     return dict(label=T("Statistics"))
 
-@auth.requires_login()
+def conn_lime():
+    limeurl = myconf.get('lime.uri')
+    limeuser = myconf.get('lime.usr')
+    limepasswd = myconf.get('lime.passwd')
+    lime = PyLimeRc(limeurl)
+    lime.get_session_key(limeuser, limepasswd)
+    return lime
+
 def update_surveys():
     lime = conn_lime()
     new_surveys_list = lime.list_surveys()
-    old_sid_list = db(db.surveys).select(db.surveys.sid)
+    old_sid_list = db(db.surveys).select(db.surveys.sid).as_list()
     for s in new_surveys_list:
-        status = T("Active") if (s['active'] == 'S') else T("Inactive")
-        db.surveys.update_or_insert((db.surveys.sid==s['sid']),title=s['surveyls_title'],status=status)
+        status = T("Active") if (s['active'] == 'Y') else T("Inactive")
+        db.surveys.update_or_insert((db.surveys.sid==s['sid']),sid=s['sid'],title=s['surveyls_title'],status=status)
+        sid={'sid':s['sid']}
+        if sid in old_sid_list:
+            old_sid_list.remove(sid)
     lime.release_session_key()
+    for old in old_sid_list:
+        db(db.surveys.sid==old['sid']).delete()
+    db.commit()
+    redirect(URL('quest','surveys'))
     return
 
 @auth.requires_login()
