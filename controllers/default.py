@@ -129,6 +129,15 @@ def patients_code():
       return json.dumps(data)
    return
 
+def experiments_code():
+   import json
+   if 'q' in request.vars:
+      q=request.vars['q']
+      rows = db(db.experiments.code.contains(q)).select(db.experiments.id,db.experiments.code)
+      data = [[row.id,row.name] for row in rows]
+      return json.dumps(data)
+   return
+
 @auth.requires_login()
 def patients_list():
    table=db.patient
