@@ -65,13 +65,13 @@ if not request.env.web2py_runtime_gae:
        format = '%(code)s - %(name)s')
 
     db.define_table('patient',
-       Field('name',label=T("Name"),unique=True,represent=lambda id, r: patient_tooltip(r.id)),
-       Field('sex',label=T("Gender")),
+       Field('name',length=255,label=T("Name"),unique=True,represent=lambda id, r: patient_tooltip(r.id)),
+       Field('sex',length=255,label=T("Gender")),
        Field('birth_date','date',label=T("Birth Date")),
        Field('first_contact','date',label=T("First Contact")),
-       Field('address',label=T("Address")),
-       Field('city',label=T("City")),
-       Field('country',label=T("Country")),
+       Field('address',length=255,label=T("Address")),
+       Field('city',length=255,label=T("City")),
+       Field('country',length=255,label=T("Country")),
        Field('observations','text',label=T("Observations")),
        Field('email',label=T("E-mail")),
        Field('phones',type='list:string',label=T("Phones")),
@@ -127,6 +127,14 @@ if not request.env.web2py_runtime_gae:
        Field('quest_source', 'upload',uploadfield='source_file',label=T("File")),
        Field('source_file','blob'),
        format = '%(name)s')
+    db.questionaries.name.requires = IS_NOT_EMPTY()
+
+    db.define_table('surveys',
+       Field('sid',length=255,unique=True,label=T("SID")),
+       Field('title',length=255,label=T("Title")),
+       Field('status',length=255,label=T("Status")),
+       Field('tags',type='list:string',label=T("Tags")),
+       format = '%(sid)s: %(title)s')
     db.questionaries.name.requires = IS_NOT_EMPTY()
 
     db.define_table('questionaries_vars',

@@ -32,7 +32,11 @@ response.menu = [
     (T('Experiments'), False, URL('default','experiments_list'), []),
     (T('Researchers'), False, URL('default','researcher_list'), []),
     (T('Exams'), False, URL('default','exams_list'), []),
-    (T("Questionaries"), False, URL('quest','index'), []),
+    (T("Questionaries"), False, '#', [
+            (T("Statistics"), False, URL('quest','index')),
+            (T("Surveys"), False, URL('quest','surveys')),
+            (T("Files"), False, URL('quest','files'))
+    ]),
     (T("Administrative Interface"), False, URL('admin','default','index'), []),
     #(T("Files"), False, URL('default','files'), []),
     #(T('Database Map'), False, URL('default','map_files'), [])
