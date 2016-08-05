@@ -17,8 +17,6 @@ def index():
     import numpy as np
     import random
 
-    #convert_names()
-
     total_gender = {}
     total_gender['Male'] = db(db.patient.sex == 'Male').count()
     total_gender['Female'] = db(db.patient.sex == 'Female').count()
