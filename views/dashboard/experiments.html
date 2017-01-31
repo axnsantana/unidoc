@@ -1,0 +1,50 @@
+{{
+  response.files.append(URL('static','js/jquery.js'))
+  response.files.append(URL('static','css/web2py.css'))
+  response.files.append(URL('static','css/pure/pure-min.css'))
+}}
+{{extend 'layout.html'}}
+
+
+<div class="container-fluid">
+ <div class="row">
+    <div class="col-sm-12 col-md-12">
+      {{=search}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12 col-md-12">
+      <div id='informations' ></div>
+    </div>
+  </div>
+</div>
+
+<script type="text/javascript">
+
+function showInfo(expts) {
+  $.ajax({
+    url: '{{=URL('dashboard', 'patients_per_experiment')}}',
+    type: 'post',
+    data: {
+      'expts': expts
+    },
+    beforeSend: function() {
+      $('#informations').html("<img src='{{=URL('static','images/loading.gif')}}'/>");
+    },
+    success: function(r){
+      $('#informations').html(r);
+    },
+    error: function(xhr, status, error) {
+      $('#informations').html(xhr);
+    }
+  });
+};
+
+$("#no_table_search").change(function(){
+  list=[]
+  $('#no_table_search option:selected').each(function(index,element){
+   list.push(element.value)
+  });
+  showInfo(list);
+});
+</script>
