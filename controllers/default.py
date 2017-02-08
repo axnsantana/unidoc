@@ -118,6 +118,7 @@ def table_list(table,label,orderby,create=True):
               orderby=orderby,maxtextlength=64, paginate=25),
               label=label)
 
+@auth.requires_login()
 def patients_code():
    import json
    if 'q' in request.vars:
@@ -127,6 +128,7 @@ def patients_code():
       return json.dumps(data)
    return
 
+@auth.requires_login()
 def experiments_code():
    import json
    if 'q' in request.vars:
@@ -171,8 +173,6 @@ def groups_list():
 def experiments_list():
    table=db.experiments
    return table_list(table,T("Experiments"),table.code)
-
-
 
 @auth.requires_login()
 def getFilesAnchor(row):

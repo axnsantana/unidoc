@@ -28,8 +28,9 @@ response.google_analytics_id = None
 response.menu = [
     (T('Home'), False, URL('default','index'), []),
     (T("Dashboard"), False, '#', [
-        (T("Patients"), False, URL('dashboard','patients'), []),
+        #(T("Patients"), False, URL('dashboard','patients'), []),
         (T("Experiments"), False, URL('dashboard','experiments'), []),
+        (T("Groups"), False, URL('dashboard','groups'), []),
     ]),
     (T("Manage"), False, '#', [
         (T("Patients"), False, URL('default','patients_list'), []),
