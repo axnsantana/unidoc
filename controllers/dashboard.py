@@ -18,14 +18,18 @@ def groups():
 def patients_per_experiment():
     experiments = request.vars['expts[]']
     html="<table class='pure-table pure-table-bordered' style='table-layout: fixed; width: 100%'>"
-    html+="<thead><th>%s</th><th>%s</th></thead>" % (T("Name"),T("Experiments"))
+    html+="<thead><th>%s</th><th>%s</th><th>%s</th><th>%s</th></thead>" \
+             % (T("Name"),T("Experiments"),T("E-mail"),T("Phone"))
     patients = {}
     if experiments:
         if (not (type(experiments) is list)):
             experiments = [experiments]
-        rows = db(db.patient.experiments.contains(experiments, all=True)).select(orderby=db.patient.name)
+        rows = db(db.patient.experiments.contains(experiments,
+                    all=True)).select(orderby=db.patient.name)
         for r in rows:
-            html+="<tr><td>%s</td><td>%s</td></tr>" % (r.name, db.patient.experiments.represent(r.experiments))
+            html+="<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" \
+                    % (r.name, db.patient.experiments.represent(r.experiments),
+                       r.email,", ".join(r.phones))
     html+="</table>"
     return html
 
@@ -33,12 +37,14 @@ def patients_per_experiment():
 def patients_per_group():
     groups = request.vars['groups[]']
     html="<table class='pure-table pure-table-bordered' style='table-layout: fixed; width: 100%'>"
-    html+="<thead><th>%s</th><th>%s</th><th>%s</th><th>%s</th></thead>" % (T("Name"),T("Groups"),T("E-mail"),T("Phone"))
+    html+="<thead><th>%s</th><th>%s</th><th>%s</th><th>%s</th></thead>" \
+            % (T("Name"),T("Groups"),T("E-mail"),T("Phone"))
     patients = {}
     if groups:
         if (not (type(groups) is list)):
             groups = [groups]
-        rows = db(db.patient.groups.contains(groups, all=True)).select(orderby=db.patient.name)
+        rows = db(db.patient.groups.contains(groups,
+                  all=True)).select(orderby=db.patient.name)
         for r in rows:
             html+="<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>" \
                     % (r.name, db.patient.groups.represent(r.groups),
