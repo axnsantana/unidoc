@@ -21,12 +21,13 @@
 
 <script type="text/javascript">
 
-function showInfo(groups) {
+function showInfo(groups,match) {
   $.ajax({
     url: '{{=URL('dashboard', 'patients_per_group')}}',
     type: 'post',
     data: {
-      'groups': groups
+      'groups': groups,
+      'match': match
     },
     beforeSend: function() {
       $('#informations').html("<img src='{{=URL('static','images/loading.gif')}}'/>");
@@ -40,11 +41,11 @@ function showInfo(groups) {
   });
 };
 
-$("#no_table_search").change(function(){
+$("#no_table_search,#no_table_match").change(function(){
   list=[]
   $('#no_table_search option:selected').each(function(index,element){
    list.push(element.value)
   });
-  showInfo(list);
+  showInfo(list,$("#no_table_match").is(':checked'));
 });
 </script>
